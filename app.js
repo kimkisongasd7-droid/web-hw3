@@ -1,4 +1,6 @@
 const dialog = document.getElementById("detail");
+
+// 배열, 속성명, 내림차순 여부 => 정렬된 새 배열
 function sortBy(list, key, desc) {
     return [...list].sort((a, b) => {
         let result = 0;
@@ -19,13 +21,13 @@ function search(list, keyword) {
     return list.filter(m => m.title.toLowerCase().includes(keyword));
 }
 
-
+// 경로, 크기 => TMDB 포스터 이미지 URL 문자열
 function posterUrl(path, size) {
     return "https://image.tmdb.org/t/p/" + size + path;
 }
 
 
-
+// 영화 배열 => 없음(보드 DOM 렌더링 및 개수 갱신)
 const renderCards = (list) => {
     const board = document.querySelector(".board");
     board.innerHTML = "";
@@ -70,7 +72,7 @@ const renderCards = (list) => {
     document.getElementById("likeCount").textContent = liked.length;
     if (list.length === 0) { board.classList.add("is-empty"); } else { board.classList.remove("is-empty"); }
 }
-
+// 없음 => 검색·필터·정렬이 적용된 영화 배열
 function getView() {
     const keyword = document.getElementById("q").value;
     const type = document.querySelector("input[name='type']:checked").value;
@@ -81,6 +83,7 @@ function getView() {
     }
     return sortBy(list, key, key !== "title");
 }
+// 없음 => 없음(현재 조건으로 화면 다시 그리기)
 function refresh() { 
     renderCards(getView()); 
 }
@@ -91,7 +94,7 @@ function saveLiked() {
  localStorage.setItem("liked", JSON.stringify(liked));
 }
 
-
+// 영화 제목 => 없음(상세 대화상자 내용 채우고 열기)
 function openDetail(title) {
     const movie = movies.find(m => m.title === title);
     if (!movie) return;
@@ -103,7 +106,7 @@ function openDetail(title) {
     dialog.showModal();
 }
 
-
+renderCards(movies);
 
 
 
@@ -115,7 +118,7 @@ document.getElementById("sort").addEventListener("change", refresh);
 document.getElementById("typeFilter").addEventListener("change", refresh);
 refresh();
 
-renderCards(movies);
+
 
 
 document.querySelector(".board").addEventListener("click", (e) => {
