@@ -34,19 +34,52 @@ const renderCards = (list) => {
         if (m.rating >= 8) {
             card.classList.add("hot");
         }
+
+
+        card.setAttribute("data-type", m.type);
+        card.setAttribute("data-title", m.title);
+        let rank = "";
+        if (m.type === "boxoffice") {
+            rank = `<span class="rank">${m.rank}</span>`;
+        }
+        let poster = `<img class="poster" src="${posterUrl(m.poster, "w342")}" alt="${m.title} 포스터">`;
+        if (m.poster === null) {
+            card.classList.add("no-poster");
+            poster = `<div class="poster-fallback">${m.title[0]}</div>`;
+        }
+
         card.innerHTML = `
-           <img class="poster" src="${posterUrl(m.poster, "w342")}" alt="${m.title} 포스터">
+           ${poster}
+           ${rank}
            <span class="badge">${m.rating}</span>
            <div class="info">
-           <h2>${m.title}</h2>
+           <h3>${m.title}</h3>
            <p class="year">${m.year}</p>
            <button class="like" type="button">♥</button>
            </div>`;
         board.appendChild(card);
         document.querySelector("#count").textContent = list.length + "편";
-        updateLikeCount();
+        //updateLikeCount();
     }
     if (list.length === 0) { board.classList.add("is-empty"); } else { board.classList.remove("is-empty"); }
 }
 
+function getView() {
+    const keyword = document.getElementById("q").value;
+    const type = document.querySelector("input[name='type']:checked").value;
+    const key = document.getElementById("sort").value;
+    let list = search(movies, keyword);
+    if (type !== "all") {
+        list = list.filter(m => m.type === type);
+    }
+    return sortBy(list, key, key !== "title");
+}
+function refresh() { 
+    renderCards(getView()); 
+}
+document.getElementById("q").addEventListener("input", refresh);
+document.getElementById("sort").addEventListener("change", refresh);
+document.getElementById("typeFilter").addEventListener("change", refresh);
+refresh();
 
+renderCards(movies);
