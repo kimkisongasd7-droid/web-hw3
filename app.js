@@ -1,3 +1,4 @@
+const dialog = document.getElementById("detail");
 function sortBy(list, key, desc) {
     return [...list].sort((a, b) => {
         let result = 0;
@@ -91,6 +92,20 @@ function saveLiked() {
 }
 
 
+function openDetail(title) {
+    const movie = movies.find(m => m.title === title);
+    if (!movie) return;
+    document.getElementById("detailBody").innerHTML = `
+        <img src="${posterUrl(movie.poster, "w500")}" alt="${movie.title} 포스터">
+        <h2>${movie.title}</h2>
+        <p>개봉일 ${movie.date}, 평점 ${movie.rating}</p>
+        <p>${movie.overview}</p>`;
+    dialog.showModal();
+}
+
+
+
+
 
 
 
@@ -118,7 +133,10 @@ document.querySelector(".board").addEventListener("click", (e) => {
         refresh();
         return;
     }
-
+    openDetail(title);
+});
+document.getElementById("closeDetail").addEventListener("click", () => {
+    dialog.close();
 });
 
 
